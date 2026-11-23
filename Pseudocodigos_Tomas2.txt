@@ -1,0 +1,167 @@
+PSEUDOCÓDIGOS - TOMAS 2
+
+1. encolar(dato)
+INICIO
+    nuevo <- crear Nodo con dato
+    SI fin es nulo ENTONCES
+        frente <- nuevo
+        fin <- nuevo
+    SINO
+        fin.siguiente <- nuevo
+        fin <- nuevo
+    FIN SI
+    tamano <- tamano + 1
+FIN
+
+2. desencolar()
+INICIO
+    SI frente es nulo ENTONCES
+        RETORNAR nulo
+    FIN SI
+    dato <- frente.dato
+    frente <- frente.siguiente
+    SI frente es nulo ENTONCES
+        fin <- nulo
+    FIN SI
+    tamano <- tamano - 1
+    RETORNAR dato
+FIN
+
+3. apilar(dato)
+INICIO
+    nuevo <- crear Nodo con dato
+    nuevo.siguiente <- tope
+    tope <- nuevo
+    tamano <- tamano + 1
+FIN
+
+4. desapilar()
+INICIO
+    SI tope es nulo ENTONCES
+        RETORNAR nulo
+    FIN SI
+    dato <- tope.dato
+    tope <- tope.siguiente
+    tamano <- tamano - 1
+    RETORNAR dato
+FIN
+
+5. cima()
+INICIO
+    SI tope es nulo ENTONCES
+        RETORNAR nulo
+    FIN SI
+    RETORNAR tope.dato
+FIN
+
+6. eliminar(posicion)
+INICIO
+    SI posicion < 0 O posicion >= tamano ENTONCES
+        RETORNAR nulo
+    FIN SI
+
+    SI posicion = 0 ENTONCES
+        eliminado <- cabeza.dato
+        cabeza <- cabeza.siguiente
+        SI cabeza es nulo ENTONCES
+            ultimo <- nulo
+        FIN SI
+    SINO
+        anterior <- cabeza
+        PARA i DESDE 0 HASTA posicion - 2 HACER
+            anterior <- anterior.siguiente
+        FIN PARA
+        objetivo <- anterior.siguiente
+        eliminado <- objetivo.dato
+        anterior.siguiente <- objetivo.siguiente
+        SI objetivo es igual a ultimo ENTONCES
+            ultimo <- anterior
+        FIN SI
+    FIN SI
+
+    tamano <- tamano - 1
+    RETORNAR eliminado
+FIN
+
+7. insertarEn(posicion, dato)
+INICIO
+    SI posicion < 0 O posicion > tamano ENTONCES
+        RETORNAR falso
+    FIN SI
+    nuevo <- crear Nodo con dato
+
+    SI posicion = 0 ENTONCES
+        nuevo.siguiente <- cabeza
+        cabeza <- nuevo
+        SI ultimo es nulo ENTONCES
+            ultimo <- nuevo
+        FIN SI
+    SINO SI posicion = tamano ENTONCES
+        ultimo.siguiente <- nuevo
+        ultimo <- nuevo
+    SINO
+        anterior <- cabeza
+        PARA i DESDE 0 HASTA posicion - 2 HACER
+            anterior <- anterior.siguiente
+        FIN PARA
+        nuevo.siguiente <- anterior.siguiente
+        anterior.siguiente <- nuevo
+    FIN SI
+
+    tamano <- tamano + 1
+    RETORNAR verdadero
+FIN
+
+8. ordenarPorMonto(lista)
+INICIO
+    ordenada <- nueva Lista vacia
+    actual <- lista.cabeza
+
+    MIENTRAS actual no es nulo HACER
+        t <- actual.dato
+        SI t.esEfectiva() ENTONCES
+            posicion <- 0
+            recorrido <- ordenada.cabeza
+            MIENTRAS recorrido no es nulo Y recorrido.dato.monto >= t.monto HACER
+                posicion <- posicion + 1
+                recorrido <- recorrido.siguiente
+            FIN MIENTRAS
+            ordenada.insertarEn(posicion, t)
+        FIN SI
+        actual <- actual.siguiente
+    FIN MIENTRAS
+
+    RETORNAR ordenada
+FIN
+
+
+FUNCIONES QUE INTERVIENEN EN CADA CONSULTA
+
+C1  Fila de espera ............ frente, tamano, mostrarCola, quienSigue
+C2  Historial de un cliente ... listarPorCliente, totalPorDivisa
+C3  Divisa de mayor volumen ... totalPorDivisa, convertir
+C4  Reversadas y clientes ..... listarPorEstado, buscarPorId
+C5  Comisiones del dia ........ recorrido de lista, esEfectiva, calcularComision
+C6  Saldo de caja ............. consultarSaldo, consultarSaldoInicial, diferenciaSaldo
+C7  Top 3 por monto ........... ordenarPorMonto, mayorTransaccion
+C8  Cliente mas frecuente ..... clienteMasFrecuente
+C9  Operaciones entre horas ... transaccionesEnRango
+C10 Historial de una tasa ..... lectura de historial_tasas.txt
+C11 Comisiones por tipo ....... comisionesPorTipo, getTipo
+C12 Empresariales con NIT ..... listarPorTipoCliente, getMontoEquivalenteCOP
+
+
+CASOS DE PRUEBA DE ESTA PARTE
+
+Caso 1  - Atender con la cola vacia
+          Esperado: mensaje controlado, sin errores ni cierre del programa.
+          Resultado: desencolar() devuelve null y se muestra el mensaje. CORRECTO
+
+Caso 5  - Deshacer con la pila vacia
+          Esperado: mensaje controlado.
+          Resultado: desapilar() devuelve null y se muestra el mensaje. CORRECTO
+
+Caso 10 - Eliminar la primera, una intermedia y la ultima transaccion
+          Esperado: lista consistente en los tres casos.
+          Resultado: T002,T003,T004,T005 / T001,T002,T004,T005 / T001,T002,T003,T004
+                     (tamano 4 y agregar sigue funcionando). CORRECTO
